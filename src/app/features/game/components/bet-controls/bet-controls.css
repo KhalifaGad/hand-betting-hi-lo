@@ -1,0 +1,92 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: min(560px, 90%);
+}
+
+.bet-prompt {
+  font-size: 15px;
+  color: #b9c2da;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+.bet-prompt b {
+  color: var(--color-txt);
+}
+
+.bet-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  width: 100%;
+}
+
+.betbtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  padding: 20px 22px;
+  border-radius: 16px;
+  color: #05121a;
+  overflow: hidden;
+  transition:
+    transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.25s ease,
+    filter 0.2s;
+}
+.betbtn .ar {
+  font-size: 20px;
+  line-height: 1;
+}
+.betbtn:active {
+  transform: translateY(1px) scale(0.99);
+}
+.betbtn.higher {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--color-accent) 94%, #fff 6%),
+    color-mix(in oklch, var(--color-accent) 70%, var(--color-accent-2))
+  );
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.35) inset,
+    0 12px 30px color-mix(in oklch, var(--color-accent) 34%, transparent),
+    0 0 calc(40px * var(--glow)) color-mix(in oklch, var(--color-accent) 36%, transparent);
+}
+.betbtn.lower {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--color-accent-2) 90%, #fff 8%),
+    color-mix(in oklch, var(--color-accent-2) 64%, #3a2a6a)
+  );
+  color: #f4ecff;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.3) inset,
+    0 12px 30px color-mix(in oklch, var(--color-accent-2) 36%, transparent),
+    0 0 calc(40px * var(--glow)) color-mix(in oklch, var(--color-accent-2) 38%, transparent);
+}
+.betbtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.05) saturate(1.06);
+}
+.betbtn:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+  filter: saturate(0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .betbtn {
+    transition: none;
+  }
+}

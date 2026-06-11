@@ -1,0 +1,166 @@
+:host {
+  display: block;
+  height: 100vh;
+  outline: none;
+}
+
+/* ---------- ambient background (shared with the landing) ---------- */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      120% 90% at 12% -5%,
+      color-mix(in oklch, var(--color-accent) 20%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      120% 100% at 100% 110%,
+      color-mix(in oklch, var(--color-accent-2) 24%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(180deg, var(--color-bg-1), var(--color-bg-0));
+}
+.bg::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background-image:
+    linear-gradient(to right, var(--line-soft) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line-soft) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: calc(0.45 * var(--grid));
+  mask-image: radial-gradient(120% 90% at 50% 30%, #000 30%, transparent 85%);
+}
+.bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(130% 120% at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+}
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(72px);
+  z-index: 0;
+  pointer-events: none;
+  opacity: calc(0.4 * var(--glow));
+}
+.orb.a {
+  width: 420px;
+  height: 420px;
+  left: -130px;
+  top: 6%;
+  background: color-mix(in oklch, var(--color-accent) 60%, transparent);
+}
+.orb.b {
+  width: 480px;
+  height: 480px;
+  right: -150px;
+  bottom: -8%;
+  background: color-mix(in oklch, var(--color-accent-2) 60%, transparent);
+}
+
+/* ---------- shell ---------- */
+.gshell {
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(16px, 2vw, 26px) clamp(18px, 3vw, 40px) clamp(14px, 2vw, 22px);
+}
+
+app-game-top-bar {
+  margin-bottom: clamp(14px, 2vh, 26px);
+}
+
+/* ---------- main grid ---------- */
+.game-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: clamp(248px, 20vw, 300px) 1fr clamp(280px, 23vw, 336px);
+  grid-template-rows: 1fr auto;
+  grid-template-areas:
+    'left center right'
+    'history history history';
+  gap: clamp(14px, 1.6vw, 22px);
+}
+
+.rail.left {
+  grid-area: left;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.6vw, 22px);
+  min-height: 0;
+}
+.rail.right {
+  grid-area: right;
+  min-height: 0;
+  display: flex;
+}
+.center {
+  grid-area: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 3vh, 34px);
+  min-height: 0;
+  position: relative;
+}
+app-history-strip {
+  grid-area: history;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+@media (max-width: 1080px) {
+  .game-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'center center'
+      'left right'
+      'history history';
+  }
+}
+
+/* ---------- mobile: single column, rails fold into the bottom drawer ---------- */
+@media (max-width: 760px) {
+  :host {
+    height: auto;
+    min-height: 100dvh;
+  }
+  .gshell {
+    height: auto;
+    min-height: 100dvh;
+  }
+  .game-grid {
+    flex: none;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      'left'
+      'center';
+    gap: clamp(18px, 4vh, 30px);
+  }
+  /* Tile Values + History move into the drawer on mobile */
+  .rail.right,
+  app-history-strip {
+    display: none;
+  }
+  .rail.left {
+    min-height: auto;
+    gap: 10px;
+  }
+  .center {
+    justify-content: flex-start;
+    gap: clamp(16px, 3vh, 26px);
+    /* clear the fixed drawer trigger at the bottom */
+    padding-bottom: calc(78px + env(safe-area-inset-bottom));
+  }
+}

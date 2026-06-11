@@ -1,0 +1,38 @@
+<dialog
+  #dialog
+  class="overlay"
+  aria-labelledby="go-reason"
+  (cancel)="$event.preventDefault()"
+>
+  @if (data(); as d) {
+    <div class="summary">
+      <p class="go-eyebrow">Game Over</p>
+      <p class="go-reason" id="go-reason">{{ d.reason }}</p>
+
+      <div class="go-score">
+        <span>Final score</span>
+        <b class="mono">{{ scoreLabel() }}</b>
+      </div>
+
+      @if (d.isHighScore) {
+        <p class="go-badge">New high score</p>
+      }
+
+      <div class="go-stats">
+        <div class="st">
+          <b class="mono">{{ d.hands }}</b>
+          <span>Hands played</span>
+        </div>
+        <div class="st">
+          <b class="mono">{{ d.bestStreak }}</b>
+          <span>Best streak</span>
+        </div>
+      </div>
+
+      <div class="go-btns">
+        <button type="button" class="gobtn primary" (click)="playAgain.emit()">Play Again</button>
+        <button type="button" class="gobtn ghost" (click)="exit.emit()">Exit to Menu</button>
+      </div>
+    </div>
+  }
+</dialog>

@@ -1,0 +1,53 @@
+<div class="bg" aria-hidden="true"></div>
+<div class="orb a" aria-hidden="true"></div>
+<div class="orb b" aria-hidden="true"></div>
+
+<div class="gshell">
+  <app-game-top-bar
+    [round]="view().round"
+    [reshuffles]="view().reshuffles"
+    [maxReshuffles]="view().maxReshuffles"
+    [streak]="view().streak"
+    [score]="view().score"
+    (exit)="onExit()"
+  />
+
+  <main class="game-grid">
+    <aside class="rail left">
+      <app-deck-panel
+        [drawCount]="view().drawCount"
+        [discardCount]="view().discardCount"
+        [reshuffles]="view().reshuffles"
+        [maxReshuffles]="view().maxReshuffles"
+        (reshuffled)="onReshuffled()"
+      />
+    </aside>
+
+    <section class="center">
+      <app-result-banner [result]="lastResult()" />
+      <app-hand
+        [hand]="view().hand"
+        [total]="view().total"
+        [resolving]="view().resolving"
+        [flash]="handFlash()"
+      />
+      <app-bet-controls [disabled]="betsDisabled()" (bet)="onBet($event)" />
+    </section>
+
+    <aside class="rail right">
+      <app-tile-values-board [honors]="view().honors" />
+    </aside>
+
+    <app-history-strip [entries]="view().history" />
+  </main>
+</div>
+
+<app-game-drawer [honors]="view().honors" [history]="view().history" />
+
+<app-reshuffle-toast />
+
+<app-game-over-overlay
+  [data]="overlayData()"
+  (playAgain)="onPlayAgain()"
+  (exit)="onExit()"
+/>

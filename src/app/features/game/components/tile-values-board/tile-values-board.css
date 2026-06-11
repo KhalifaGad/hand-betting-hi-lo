@@ -1,0 +1,144 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.mono {
+  font-family: var(--font-mono);
+}
+
+.body {
+  padding: 4px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  overflow: auto;
+}
+
+/* embedded (mobile drawer): no panel chrome, rows fill the sheet */
+:host(.embedded) {
+  flex: 1;
+  min-height: 0;
+}
+:host(.embedded) .body {
+  padding: 2px 0 4px;
+}
+
+.vrow {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 11px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--line-soft);
+  transition: 0.2s;
+}
+.vchip {
+  width: 38px;
+}
+.vmid {
+  min-width: 0;
+}
+.vname {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.track {
+  position: relative;
+  height: 6px;
+  border-radius: 4px;
+  margin-top: 7px;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--color-lose) 55%, transparent),
+    var(--line) 22% 78%,
+    color-mix(in oklch, var(--color-lose) 55%, transparent)
+  );
+}
+.fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent),
+    color-mix(in oklch, var(--color-accent) 60%, var(--color-accent-2))
+  );
+  transition: width 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.vval {
+  font-size: 20px;
+  font-weight: 700;
+  width: 26px;
+  text-align: right;
+}
+
+/* danger (≤ dangerLow / ≥ dangerHigh) */
+.vrow.danger {
+  border-color: color-mix(in oklch, var(--color-lose) 50%, transparent);
+  background: color-mix(in oklch, var(--color-lose) 12%, var(--panel));
+}
+.vrow.danger .vval {
+  color: var(--color-lose);
+  text-shadow: 0 0 14px color-mix(in oklch, var(--color-lose) 50%, transparent);
+}
+.vrow.danger .fill {
+  background: var(--color-lose);
+}
+
+/* change flash */
+.vrow.changed {
+  border-color: color-mix(in oklch, var(--color-accent) 38%, var(--line));
+}
+.vrow.changed .fill {
+  filter: brightness(1.45);
+}
+.vrow.changed:not(.danger) .vval {
+  color: var(--color-accent);
+}
+
+.delta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  margin-left: 6px;
+  opacity: 0;
+  display: inline-block;
+}
+.delta.up {
+  color: var(--color-win);
+}
+.delta.down {
+  color: var(--color-lose);
+}
+.delta.show {
+  animation: delta-float 1s ease;
+}
+@keyframes delta-float {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+  .delta.show {
+    animation: none;
+  }
+}

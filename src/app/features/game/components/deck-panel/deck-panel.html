@@ -1,0 +1,30 @@
+<div class="panel-h">Deck</div>
+<div class="body">
+  <div class="pile draw" [class.low]="low()">
+    <div class="stack" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="meta">
+      <span class="n mono" [appCountPop]="drawCount()">{{ drawCount() }}</span>
+      <span class="t">Draw<span class="word"> pile</span></span>
+    </div>
+  </div>
+
+  <div class="pile discard">
+    <div class="stack" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="meta">
+      <span class="n mono" [appCountPop]="discardCount()">{{ discardCount() }}</span>
+      <span class="t">Discard<span class="word"> pile</span></span>
+    </div>
+  </div>
+
+  <div class="reshuffle">
+    <div class="rh">
+      <span><span class="full">Reshuffles</span><span class="abbr">Resh.</span></span>
+      <b class="mono">{{ reshuffles() }} / {{ maxReshuffles() }}</b>
+    </div>
+    <div class="pips" role="img" [attr.aria-label]="reshuffles() + ' of ' + maxReshuffles() + ' reshuffles used'">
+      @for (used of pips(); track $index) {
+        <i [class.used]="used"></i>
+      }
+    </div>
+  </div>
+</div>

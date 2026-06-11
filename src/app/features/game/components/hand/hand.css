@@ -1,0 +1,113 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(14px, 2.4vh, 26px);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.hand-label {
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.cards {
+  display: flex;
+  gap: clamp(14px, 1.4vw, 20px);
+  align-items: flex-end;
+  min-height: 0;
+  perspective: 1300px;
+}
+
+.cards app-mahjong-tile {
+  transition: transform 0.2s ease;
+}
+.cards app-mahjong-tile:hover {
+  transform: translateY(-9px);
+}
+
+.total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.total span {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.total b {
+  font-size: clamp(54px, 6vw, 80px);
+  font-weight: 700;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 calc(40px * var(--glow)) color-mix(in oklch, var(--color-accent) 40%, transparent);
+}
+
+/* ---- choreography (applied to the tile host element) ---- */
+.cards app-mahjong-tile.dealing {
+  animation: hand-deal 0.42s cubic-bezier(0.2, 0.85, 0.25, 1) backwards;
+}
+@keyframes hand-deal {
+  from {
+    transform: translateY(26px) rotate(-6deg) scale(0.92);
+  }
+}
+
+.cards app-mahjong-tile.dealin {
+  animation: hand-dealflip 0.55s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
+}
+@keyframes hand-dealflip {
+  from {
+    transform: translate(-150px, -14px) rotateY(82deg) scale(0.9);
+  }
+  60% {
+    transform: translate(0, 0) rotateY(-8deg) scale(1);
+  }
+}
+
+.cards app-mahjong-tile.leaving {
+  animation: hand-leave 0.24s ease-in forwards;
+}
+@keyframes hand-leave {
+  to {
+    transform: translate(-190px, 130px) rotate(-18deg) scale(0.66);
+    opacity: 0;
+  }
+}
+
+.cards app-mahjong-tile.flash-win {
+  animation: tile-flash-win 0.6s ease;
+}
+.cards app-mahjong-tile.flash-lose {
+  animation: tile-flash-lose 0.6s ease;
+}
+@keyframes tile-flash-win {
+  50% {
+    filter: drop-shadow(0 0 18px color-mix(in oklch, var(--color-win) 85%, transparent));
+  }
+}
+@keyframes tile-flash-lose {
+  50% {
+    filter: drop-shadow(0 0 18px color-mix(in oklch, var(--color-lose) 85%, transparent));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cards app-mahjong-tile,
+  .cards app-mahjong-tile.dealing,
+  .cards app-mahjong-tile.dealin,
+  .cards app-mahjong-tile.leaving,
+  .cards app-mahjong-tile.flash-win,
+  .cards app-mahjong-tile.flash-lose {
+    animation: none;
+    transition: none;
+  }
+}

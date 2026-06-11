@@ -1,0 +1,38 @@
+@if (!embedded()) {
+  <div class="hist-head">
+    <span>History · previous hands</span>
+    <span class="hk">
+      <kbd>←</kbd> lower · <kbd>→</kbd> higher · <kbd>G</kbd> summary ·
+      <b class="mono">{{ count() }}</b>
+    </span>
+  </div>
+}
+
+<div
+  class="hist-strip"
+  [attr.tabindex]="embedded() ? 0 : null"
+  [attr.role]="embedded() ? 'group' : null"
+  [attr.aria-label]="embedded() ? 'Hand history, scrollable' : null"
+>
+  @for (entry of entries(); track entry) {
+    <div
+      class="hcard"
+      [class.won]="entry.result === 'win'"
+      [class.lost]="entry.result === 'lose'"
+      [class.push]="entry.result === 'push'"
+    >
+      <div class="htiles">
+        @for (tile of entry.hand; track $index) {
+          <app-mahjong-tile [tile]="tile" [size]="30" />
+        }
+      </div>
+      <div class="hmeta">
+        <div class="htot mono">{{ entry.total }}</div>
+        <div class="hbet">{{ arrow(entry.dir) }} {{ entry.dir }}</div>
+      </div>
+      <div class="res">{{ resultLabel(entry.result) }}</div>
+    </div>
+  } @empty {
+    <p class="hist-empty">No hands yet — place a bet to start your history.</p>
+  }
+</div>

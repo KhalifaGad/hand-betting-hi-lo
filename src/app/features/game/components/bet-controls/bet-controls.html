@@ -1,0 +1,19 @@
+<p class="bet-prompt">Will the <b>next hand</b> total be higher or lower?</p>
+<div class="bet-btns">
+  <button
+    type="button"
+    class="betbtn lower"
+    [disabled]="disabled()"
+    (click)="bet.emit('lower')"
+  >
+    <span class="ar" aria-hidden="true">▼</span> Bet Lower
+  </button>
+  <button
+    type="button"
+    class="betbtn higher"
+    [disabled]="disabled()"
+    (click)="bet.emit('higher')"
+  >
+    <span class="ar" aria-hidden="true">▲</span> Bet Higher
+  </button>
+</div>

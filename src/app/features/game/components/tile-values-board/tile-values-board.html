@@ -1,0 +1,35 @@
+@if (!embedded()) {
+  <div class="panel-h">Tile values <span class="hint">reach 0 or 10 → out</span></div>
+}
+<div
+  class="body"
+  [attr.tabindex]="embedded() ? 0 : null"
+  [attr.role]="embedded() ? 'group' : null"
+  [attr.aria-label]="embedded() ? 'Tile values, scrollable' : null"
+>
+  @for (row of rows(); track row.honor.id) {
+    <div
+      class="vrow"
+      [class.danger]="row.honor.danger"
+      [class.changed]="fx()[row.honor.id]"
+      role="group"
+      [attr.aria-label]="row.honor.name + ', value ' + row.honor.value + ' of 10'"
+    >
+      <app-mahjong-tile class="vchip" [tile]="row.tile" [size]="38" />
+      <div class="vmid">
+        <div class="vname">
+          {{ row.honor.name }}
+          @if (fx()[row.honor.id]; as f) {
+            <span class="delta show" [class.up]="f.dir === 'up'" [class.down]="f.dir === 'down'">
+              {{ f.delta }}
+            </span>
+          }
+        </div>
+        <div class="track" aria-hidden="true">
+          <div class="fill" [style.width]="fillWidth(row.honor.value)"></div>
+        </div>
+      </div>
+      <div class="vval mono" [appCountPop]="row.honor.value">{{ row.honor.value }}</div>
+    </div>
+  }
+</div>

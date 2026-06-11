@@ -1,0 +1,61 @@
+@if (!open()) {
+  <button
+    type="button"
+    class="trigger"
+    aria-expanded="false"
+    aria-controls="game-drawer-sheet"
+    (click)="open.set(true)"
+  >
+    <span class="t-label"><b>Tiles</b> &amp; history</span>
+    @if (atRisk() > 0) {
+      <span class="risk"><span aria-hidden="true">⚠</span> {{ atRisk() }} at risk</span>
+    }
+    <span class="chev" aria-hidden="true">▴</span>
+  </button>
+}
+
+@if (open()) {
+  <button type="button" class="backdrop" aria-label="Close" (click)="open.set(false)"></button>
+}
+
+<section
+  id="game-drawer-sheet"
+  class="sheet"
+  [class.open]="open()"
+  aria-label="Tiles and history"
+  [attr.aria-hidden]="open() ? null : 'true'"
+  [attr.inert]="open() ? null : ''"
+>
+  <div class="grip" aria-hidden="true"></div>
+
+  <div class="sheet-head">
+    <div class="seg">
+      <button
+        type="button"
+        [class.active]="tab() === 'values'"
+        [attr.aria-pressed]="tab() === 'values'"
+        (click)="tab.set('values')"
+      >
+        Tile values
+      </button>
+      <button
+        type="button"
+        [class.active]="tab() === 'history'"
+        [attr.aria-pressed]="tab() === 'history'"
+        (click)="tab.set('history')"
+      >
+        History
+      </button>
+    </div>
+    <button #closeButton type="button" class="close" aria-label="Close" (click)="open.set(false)">
+      ✕
+    </button>
+  </div>
+
+  @if (tab() === 'values') {
+    <p class="sub">Reach 0 or 10 → tile is out</p>
+    <app-tile-values-board [honors]="honors()" [embedded]="true" />
+  } @else {
+    <app-history-strip [entries]="history()" [embedded]="true" />
+  }
+</section>

@@ -1,0 +1,142 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+}
+.mono {
+  font-family: var(--font-mono);
+}
+
+.hist-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  padding: 0 2px;
+}
+.hist-head .hk {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--color-faint);
+  text-transform: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.hist-head .hk b {
+  color: var(--color-muted);
+}
+.hist-head kbd {
+  font-family: var(--font-mono);
+  color: var(--color-muted);
+  font-size: 11px;
+}
+
+.hist-strip {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 2px 8px;
+  scrollbar-width: thin;
+}
+.hist-strip::-webkit-scrollbar {
+  height: 6px;
+}
+.hist-strip::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 3px;
+}
+
+.hcard {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line-soft);
+  animation: hist-in 0.4s ease backwards;
+}
+@keyframes hist-in {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+}
+.hcard .htiles {
+  display: flex;
+  gap: 5px;
+}
+.hcard .hmeta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  gap: 5px;
+}
+.hcard .htot {
+  font-size: 19px;
+  font-weight: 700;
+}
+.hcard .hbet {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.hcard.won {
+  border-color: color-mix(in oklch, var(--color-win) 38%, transparent);
+}
+.hcard.lost {
+  border-color: color-mix(in oklch, var(--color-lose) 36%, transparent);
+}
+.hcard .res {
+  font-size: 11px;
+  font-weight: 700;
+}
+.hcard.won .res {
+  color: var(--color-win);
+}
+.hcard.lost .res {
+  color: var(--color-lose);
+}
+.hcard.push .res {
+  color: var(--color-muted);
+}
+
+.hist-empty {
+  color: var(--color-faint);
+  font-size: 13px;
+  padding: 10px 4px;
+  margin: 0;
+}
+
+/* embedded (mobile drawer): stack cards vertically, fill the sheet */
+:host(.embedded) {
+  flex: 1;
+  min-height: 0;
+}
+:host(.embedded) .hist-strip {
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  gap: 10px;
+  padding: 2px 0 4px;
+}
+:host(.embedded) .hcard {
+  width: 100%;
+  justify-content: space-between;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hcard {
+    animation: none;
+  }
+}

@@ -1,0 +1,32 @@
+<div class="gtop-l">
+  <button type="button" class="exit" (click)="exit.emit()">
+    <span class="x" aria-hidden="true">‹</span> Exit
+  </button>
+  <div class="gbrand">
+    <span class="mark" aria-hidden="true">中</span>
+    <span class="nm">Hi-Lo</span>
+  </div>
+</div>
+
+<div class="gtop-c">
+  <div class="schip">
+    <span class="full">Round</span>
+    <span class="abbr" role="img" aria-label="Round">R</span>
+    <b class="mono">{{ round() }}</b>
+  </div>
+  <div class="schip warn">
+    <span class="full">Reshuffle</span>
+    <span class="abbr" role="img" aria-label="Reshuffle">⟳</span>
+    <b class="mono">{{ reshuffles() }}/{{ maxReshuffles() }}</b>
+  </div>
+</div>
+
+<div class="gtop-r">
+  <div class="streak" [class.idle]="streak() === 0">
+    <span class="flame" aria-hidden="true"></span> Streak <b class="mono">{{ streak() }}</b>
+  </div>
+  <div class="scorebox">
+    <span class="lbl">Score</span>
+    <b class="mono">{{ scoreLabel() }}</b>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+@if (result(); as r) {
+  <span class="ar" aria-hidden="true">{{ arrow() }}</span>
+  <span>{{ label() }} · {{ verb() }}</span>
+  @if (r.result === 'win' && r.points !== null && r.points !== undefined) {
+    <span class="pts mono">+{{ r.points.toLocaleString('en-US') }}</span>
+  }
+}

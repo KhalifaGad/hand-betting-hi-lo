@@ -64,3 +64,55 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+
+/* Shared glass panel + header used by the deck / tile-values rails. Defined
+   globally so the rule reaches the panel header inside each child component. */
+.panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  backdrop-filter: blur(16px) saturate(1.15);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+}
+.panel-h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  padding: 16px 18px 12px;
+}
+.panel-h .hint {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--color-faint);
+  text-transform: none;
+}
+
+/* Shared "count pop" FX (applied imperatively by appCountPop). The resting
+   state is the un-popped element, so a frozen timeline still ends correctly. */
+.pop {
+  display: inline-block;
+  animation: count-pop 0.36s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes count-pop {
+  0% {
+    transform: scale(1);
+  }
+  38% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pop {
+    animation: none;
+  }
+}
