@@ -1,0 +1,38 @@
+@if (showBadgeValue()) {
+  <span class="badge mono">{{ badgeValue() }}</span>
+}
+
+<div class="face">
+  @switch (mode()) {
+    @case ('chars') {
+      <span class="glyph stack">
+        <span class="num">{{ numeral() }}</span>
+        <span class="wan">萬</span>
+      </span>
+    }
+    @case ('dragon') {
+      <span class="honor dragon" [class]="honor()!.ink">
+        <span class="frame"></span>
+        <span class="glyph hglyph">{{ honor()!.glyph }}</span>
+      </span>
+    }
+    @case ('wind') {
+      <span class="honor wind">
+        <span class="wletter mono">{{ honor()!.letter }}</span>
+        <span class="glyph hglyph g-ink">{{ honor()!.glyph }}</span>
+      </span>
+    }
+    @default {
+      <!-- dots / bamboo: 3×3 pip arrangement -->
+      <span class="pips" [class]="mode()" [class.one]="isOne()">
+        @for (filled of pips(); track $index) {
+          @if (filled) {
+            <i [class]="mode() === 'dots' ? 'dot' : 'bam'"></i>
+          } @else {
+            <i class="sp"></i>
+          }
+        }
+      </span>
+    }
+  }
+</div>

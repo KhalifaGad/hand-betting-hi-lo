@@ -1,0 +1,18 @@
+<div class="fan-inner" appPointerParallax>
+  @for (item of layout(); track $index) {
+    <div
+      class="fan-tile"
+      [style.translate]="item.translate"
+      [style.rotate]="item.rotate"
+      [style.z-index]="item.zIndex"
+      [style.animation-delay.s]="$index * 0.24"
+    >
+      <app-mahjong-tile [tile]="item.tile" [size]="size()" />
+    </div>
+  }
+</div>
+
+<div class="caption mono">
+  <span class="pulse" aria-hidden="true"></span>
+  {{ caption() }}
+</div>

@@ -1,0 +1,88 @@
+<div class="bg" aria-hidden="true"></div>
+<div class="orb a" aria-hidden="true"></div>
+<div class="orb b" aria-hidden="true"></div>
+<div class="scanlines" aria-hidden="true"></div>
+
+<div class="shell">
+  <!-- ===== Top bar ===== -->
+  <header class="top anim d1">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"><span>中</span></div>
+      <div class="name"><b>HI-LO</b><span class="name-suffix"> · Hand Betting</span></div>
+    </div>
+    <div class="top-right">
+      <button type="button" class="chip" (click)="howToPlay()">
+        <span class="dot" aria-hidden="true"></span> How to Play
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Stage ===== -->
+  <div class="center">
+    <main class="stage">
+      <!-- Hero -->
+      <section class="hero">
+        <p class="eyebrow anim d2">Mahjong · Arcade Edition</p>
+        <h1 class="title">
+          <span class="hi anim d2">HI<em>·</em>LO</span>
+          <span class="sub2 anim d3">Hand&nbsp;Betting</span>
+        </h1>
+        <p class="lede anim d3">
+          Read the hand. Call the next one <b class="hl-cyan">higher</b> or
+          <b class="hl-violet">lower</b>. Ride the streak, dodge the bust as tile values drift
+          toward the edge — and carve your initials into the board.
+        </p>
+
+        <div class="cta-row anim d4">
+          <button appNeon variant="primary" type="button" class="cta-primary" (click)="newGame()">
+            <span class="play" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 3.5v17l15-8.5z" /></svg>
+            </span>
+            New Game
+          </button>
+          <p class="enter-hint">Press <kbd class="key mono">Enter ⏎</kbd> to deal in</p>
+        </div>
+
+        <div class="meta-row anim d5">
+          <span class="m"
+            ><span class="ic" aria-hidden="true"></span> Dragons · Winds · Numbers</span
+          >
+          <span class="sep" aria-hidden="true"></span>
+          <span class="m"><span class="ic" aria-hidden="true"></span> Bet higher or lower</span>
+          <span class="sep" aria-hidden="true"></span>
+          <span class="m"
+            ><span class="ic" aria-hidden="true"></span> {{ config.maxReshuffles }} reshuffles to
+            bust</span
+          >
+        </div>
+      </section>
+
+      <!-- Aside: leaderboard -->
+      <aside class="aside anim d4">
+        <app-leaderboard
+          [entries]="leaderboard()"
+          [gamesPlayed]="gamesPlayed()"
+          (cleared)="clearScores()"
+        />
+      </aside>
+    </main>
+
+    <!-- Hero hand -->
+    <app-tile-fan class="anim d5" [tiles]="fanHand" />
+  </div>
+
+  <!-- ===== Footer ===== -->
+  <footer class="foot anim d6">
+    <span>No real wagering — just tiles &amp; nerve.</span>
+    <span
+      >Values drift each hand · reach <b>{{ config.bustLow }}</b> or
+      <b>{{ config.bustHigh }}</b> and the tile is out.</span
+    >
+  </footer>
+</div>
+
+<app-how-to-play
+  [open]="howToOpen()"
+  (closed)="howToOpen.set(false)"
+  (startPlaying)="startPlaying()"
+/>

@@ -1,0 +1,377 @@
+:host {
+  display: contents;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+.hl-cyan {
+  color: var(--color-accent);
+}
+.hl-violet {
+  color: var(--color-accent-2);
+}
+.accent {
+  color: var(--color-accent);
+}
+
+/* ---------- dialog shell ---------- */
+.howto {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+  border: none;
+  padding: clamp(10px, 2vh, 20px) clamp(14px, 3vw, 40px);
+  background: transparent;
+  color: var(--color-txt);
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+}
+/* Setting `display` above overrides the UA `dialog:not([open])` rule, so
+   restore the hidden state explicitly when the dialog is closed. */
+.howto:not([open]) {
+  display: none;
+}
+.howto::backdrop {
+  background: rgba(5, 8, 14, 0.74);
+  backdrop-filter: blur(10px);
+}
+
+.sheet {
+  position: relative;
+  margin: auto;
+  width: min(1180px, 100%);
+  min-width: 0; /* allow the flex item to shrink to the container, not its content */
+  padding: clamp(20px, 2.2vw, 34px);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
+  border: 1px solid var(--line);
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 0 90px color-mix(in oklch, var(--color-accent-2) 14%, transparent);
+}
+.sheet::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  border-radius: 24px 24px 0 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--color-accent) 60%, transparent),
+    transparent
+  );
+}
+
+.close {
+  position: absolute;
+  top: clamp(16px, 2vw, 26px);
+  right: clamp(16px, 2vw, 26px);
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--color-muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.close:hover {
+  color: var(--color-txt);
+  border-color: color-mix(in oklch, var(--color-accent) 45%, var(--line));
+  background: var(--panel-2);
+}
+.close:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- header ---------- */
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 10px;
+}
+.title {
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0 0 12px;
+  max-width: 60ch;
+  padding-right: 44px; /* reserve room so the title never tucks under the close button */
+}
+.lede {
+  font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.55;
+  color: #b9c2da;
+  max-width: 64ch;
+  margin: 0 0 18px;
+  text-wrap: pretty;
+}
+
+/* ---------- shared card ---------- */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+/* ---------- steps ---------- */
+.steps {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.step .num {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: linear-gradient(145deg, var(--color-accent), var(--color-accent-2));
+  color: #06121a;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.step h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+.step p {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--color-muted);
+  margin: 0;
+}
+.mini-bets {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+.pill {
+  flex: 1;
+  text-align: center;
+  padding: 9px 10px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #05121a;
+}
+.pill.higher {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--color-accent) 92%, #fff),
+    var(--color-accent)
+  );
+}
+.pill.lower {
+  color: #f4ecff;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--color-accent-2) 90%, #fff),
+    color-mix(in oklch, var(--color-accent-2) 64%, #3a2a6a)
+  );
+}
+
+/* ---------- feature panels ---------- */
+.features {
+  display: grid;
+  grid-template-columns: 1fr 1.12fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.panel-title {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 14px;
+}
+.panel > p {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--color-muted);
+  margin: 0;
+}
+.tv-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.tv-row + .tv-row {
+  margin-top: 12px;
+}
+.tv-tiles {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+.tv-row p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+.twist {
+  border-color: color-mix(in oklch, var(--color-accent-2) 30%, var(--line));
+  background: color-mix(in oklch, var(--color-accent-2) 8%, var(--panel));
+}
+.drift-chips {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 14px 0 16px;
+}
+.drift {
+  padding: 12px 14px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--line);
+}
+.drift.up {
+  color: var(--color-win);
+  background: color-mix(in oklch, var(--color-win) 12%, transparent);
+  border-color: color-mix(in oklch, var(--color-win) 35%, transparent);
+}
+.drift.down {
+  color: var(--color-lose);
+  background: color-mix(in oklch, var(--color-lose) 12%, transparent);
+  border-color: color-mix(in oklch, var(--color-lose) 35%, transparent);
+}
+.twist-track {
+  position: relative;
+  height: 7px;
+  border-radius: 5px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--color-lose) 70%, transparent),
+    var(--line) 25% 75%,
+    color-mix(in oklch, var(--color-lose) 70%, transparent)
+  );
+}
+.twist-track .knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-accent);
+  border: 2px solid #0b1120;
+  box-shadow: 0 0 14px color-mix(in oklch, var(--color-accent) 70%, transparent);
+}
+.twist-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-muted);
+}
+.twist-scale .edge {
+  color: var(--color-lose);
+}
+
+/* ---------- info cards ---------- */
+.info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.info-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 12px;
+}
+.bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
+.bullet.cyan {
+  background: var(--color-accent);
+  box-shadow: 0 0 9px color-mix(in oklch, var(--color-accent) 75%, transparent);
+}
+.bullet.red {
+  background: var(--color-lose);
+  box-shadow: 0 0 9px color-mix(in oklch, var(--color-lose) 75%, transparent);
+}
+.bullet.gold {
+  background: var(--color-gold);
+  box-shadow: 0 0 9px color-mix(in oklch, var(--color-gold) 75%, transparent);
+}
+.info-card p {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* ---------- footer ---------- */
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.footer button {
+  font-size: 15px;
+  padding: 12px 24px;
+}
+
+/* ---------- open animation ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .howto[open] .sheet {
+    animation: sheetIn 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  @keyframes sheetIn {
+    from {
+      transform: scale(0.94);
+      opacity: 0;
+    }
+  }
+}
+
+/* ---------- responsive ---------- */
+/* Stack the two large feature panels first; the small step/info cards keep
+   their columns as long as they fit, then collapse on phones. */
+@media (max-width: 900px) {
+  .features {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 620px) {
+  .steps,
+  .info,
+  .drift-chips {
+    grid-template-columns: 1fr;
+  }
+}

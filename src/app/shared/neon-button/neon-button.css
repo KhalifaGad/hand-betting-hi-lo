@@ -1,0 +1,72 @@
+:host {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: 0.01em;
+  border-radius: 15px;
+  padding: 18px 30px;
+  color: var(--color-txt);
+  transition:
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.25s ease,
+    filter 0.2s;
+}
+
+:host(:active) {
+  transform: translateY(1px) scale(0.99);
+}
+
+:host(:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ---- primary: cyan → violet gradient + neon glow ---- */
+:host(.primary) {
+  color: #04121a;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--color-accent) 92%, #fff 10%),
+    var(--color-accent-2)
+  );
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.35) inset,
+    0 10px 30px color-mix(in oklch, var(--color-accent) 38%, transparent),
+    0 0 calc(48px * var(--glow)) color-mix(in oklch, var(--color-accent) 42%, transparent);
+}
+:host(.primary:hover) {
+  transform: translateY(-2px);
+  filter: saturate(1.08) brightness(1.04);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.45) inset,
+    0 16px 40px color-mix(in oklch, var(--color-accent) 50%, transparent),
+    0 0 calc(70px * var(--glow)) color-mix(in oklch, var(--color-accent) 60%, transparent);
+}
+
+/* ---- ghost: glass fill ---- */
+:host(.ghost) {
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+:host(.ghost:hover) {
+  border-color: color-mix(in oklch, var(--color-accent) 50%, var(--line));
+  background: var(--panel-2);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    transition: none;
+  }
+  :host(.primary:hover),
+  :host(.ghost:hover),
+  :host(:active) {
+    transform: none;
+  }
+}

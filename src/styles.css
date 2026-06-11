@@ -1,3 +1,66 @@
-/* You can add global styles to this file, and also import other style files */
+/* ============================================================
+   HI-LO HAND BETTING — global design tokens
+   Hand-written CSS (no utility framework), per the design handoff.
+   Colors authored in OKLCH (source of truth); consumed via var().
+   ============================================================ */
+:root {
+  /* surfaces & text */
+  --color-bg-0: #070a12;
+  --color-bg-1: #0c111d;
+  --color-txt: #eef3ff;
+  --color-muted: #8a96b4;
+  --color-faint: #7c86a3; /* bumped from #67718f to clear WCAG-AA 4.5:1 (F5) */
 
-@import 'tailwindcss';
+  /* neon accents */
+  --color-accent: oklch(0.84 0.15 205); /* electric cyan */
+  --color-accent-2: oklch(0.7 0.21 312); /* violet */
+  --color-gold: oklch(0.83 0.135 86); /* winner gold */
+  --color-win: oklch(0.8 0.16 155);
+  --color-lose: oklch(0.66 0.2 22);
+
+  /* tile face ink */
+  --color-g-red: #d2243a;
+  --color-g-green: #1f9d57;
+  --color-g-blue: #2358b8;
+  --color-g-ink: #2a3656;
+
+  /* type */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+
+  /* glass / line tokens (rgba — not flat colors) */
+  --panel: rgba(255, 255, 255, 0.045);
+  --panel-2: rgba(255, 255, 255, 0.07);
+  --line: rgba(255, 255, 255, 0.1);
+  --line-soft: rgba(255, 255, 255, 0.06);
+
+  /* FX multipliers: --glow scales neon, --grid the bg grid, --scan scanlines */
+  --glow: 1;
+  --grid: 1;
+  --scan: 0;
+
+  /* Breakpoints (F4): single shared width breakpoint between the stacked
+     mobile layout and the desktop multi-column layout. Media queries can't
+     read custom properties, so this documents the value used across the app. */
+  --bp-desktop: 980px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-display);
+  background: var(--color-bg-0);
+  color: var(--color-txt);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}

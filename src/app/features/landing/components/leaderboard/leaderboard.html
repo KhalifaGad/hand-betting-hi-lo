@@ -1,0 +1,57 @@
+<div class="board">
+  <div class="board-head">
+    <div class="t">Personal <b>Best Runs</b></div>
+    <div class="badge mono">{{ isEmpty() ? 'New' : gamesPlayed() + ' Games' }}</div>
+  </div>
+
+  <ol class="rows">
+    @if (isEmpty()) {
+      @for (slot of placeholderRanks; track slot) {
+        <li class="row" [class.first]="slot === 1">
+          <span class="who">
+            <span class="ava mono">{{ slot }}</span>
+            <span class="who-text">
+              @if (slot === 1) {
+                <span class="nm">Your first run lands here</span>
+                <span class="sub">deal in to set a score</span>
+              } @else {
+                <span class="ph-line" aria-hidden="true"></span>
+                <span class="ph-line short" aria-hidden="true"></span>
+              }
+            </span>
+          </span>
+          <span class="dash" aria-hidden="true">—</span>
+        </li>
+      }
+    } @else {
+      @for (entry of entries(); track entry.rank) {
+        <li class="row" [class.first]="entry.rank === 1">
+          <span class="who">
+            <span class="ava mono">
+              @if (entry.rank === 1) {
+                <span class="trophy" aria-hidden="true">🏆</span>
+              } @else {
+                {{ entry.rank }}
+              }
+            </span>
+            <span class="who-text">
+              <span class="nm">{{ entry.label }}</span>
+              <span class="sub">{{ entry.detail }}</span>
+            </span>
+          </span>
+          <span class="score mono">{{ format(entry.score) }}</span>
+        </li>
+      }
+    }
+  </ol>
+
+  <div class="board-foot">
+    @if (isEmpty()) {
+      <span>Top 5 runs save to this device</span>
+      <span class="empty-note">Nothing here yet</span>
+    } @else {
+      <span>Saved on this device</span>
+      <button type="button" class="reset" (click)="cleared.emit()">Clear scores →</button>
+    }
+  </div>
+</div>

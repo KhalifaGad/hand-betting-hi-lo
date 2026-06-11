@@ -1,0 +1,119 @@
+<dialog #dialog class="howto" aria-labelledby="howto-title" (close)="onClose()">
+  <div class="sheet">
+    <button class="close" type="button" aria-label="Close" (click)="onClose()">✕</button>
+
+    <p class="eyebrow">How to Play</p>
+    <h2 class="title" id="howto-title">
+      Read the hand. <span class="accent">Call the next one.</span>
+    </h2>
+    <p class="lede">
+      Each hand of Mahjong tiles has a total value. Bet whether the <b>next</b> hand will total
+      <b class="hl-cyan">higher</b> or <b class="hl-violet">lower</b>. String correct calls into a
+      streak, dodge the bust, and beat your personal best.
+    </p>
+
+    <!-- Steps -->
+    <ol class="steps">
+      <li class="card step">
+        <span class="num mono" aria-hidden="true">1</span>
+        <h3>Read your hand</h3>
+        <p>Every tile has a value. Their sum is the hand total you're betting against.</p>
+      </li>
+      <li class="card step">
+        <span class="num mono" aria-hidden="true">2</span>
+        <h3>Call higher or lower</h3>
+        <p>Predict where the next hand's total lands versus the current one.</p>
+        <div class="mini-bets" aria-hidden="true">
+          <span class="pill lower">▼ Lower</span>
+          <span class="pill higher">▲ Higher</span>
+        </div>
+      </li>
+      <li class="card step">
+        <span class="num mono" aria-hidden="true">3</span>
+        <h3>Reveal &amp; resolve</h3>
+        <p>Right call → score and grow your streak. Wrong call → the streak resets.</p>
+      </li>
+    </ol>
+
+    <!-- Feature panels -->
+    <div class="features">
+      <section class="card panel">
+        <h3 class="panel-title">Tile Values</h3>
+        <div class="tv-row">
+          <div class="tv-tiles">
+            @for (tile of numberTiles; track $index) {
+              <app-mahjong-tile [tile]="tile" [size]="48" />
+            }
+          </div>
+          <p>Number tiles — dots, bamboo &amp; characters. Worth their face value, <b>1–9</b>.</p>
+        </div>
+        <div class="tv-row">
+          <div class="tv-tiles">
+            @for (tile of honorTiles; track $index) {
+              <app-mahjong-tile
+                [tile]="tile"
+                [size]="48"
+                [showBadge]="true"
+                [badgeValue]="config.honorStart"
+              />
+            }
+          </div>
+          <p>
+            Honor tiles — 3 dragons &amp; 4 winds. They start at <b>{{ config.honorStart }}</b> and
+            their value drifts as you play.
+          </p>
+        </div>
+      </section>
+
+      <section class="card panel twist">
+        <h3 class="panel-title accent">The Twist · Living Honor Tiles</h3>
+        <p>
+          Honor tiles remember how they've been played. After each hand, the dragons &amp; winds in
+          it shift:
+        </p>
+        <div class="drift-chips">
+          <span class="drift up">▲ In a win +1</span>
+          <span class="drift down">▼ In a loss −1</span>
+        </div>
+        <div class="twist-track" aria-hidden="true"><span class="knob"></span></div>
+        <div class="twist-scale" aria-hidden="true">
+          <span class="edge">{{ config.bustLow }} · out</span>
+          <span>start {{ config.honorStart }}</span>
+          <span class="edge">{{ config.bustHigh }} · out</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- Info cards -->
+    <div class="info">
+      <section class="card info-card">
+        <h3 class="info-title"><span class="bullet cyan" aria-hidden="true"></span> Deck</h3>
+        <p>
+          Draw and discard piles. When the draw runs dry it <b>reshuffles</b> — you get
+          <b>{{ config.maxReshuffles }}</b
+          >.
+        </p>
+      </section>
+      <section class="card info-card">
+        <h3 class="info-title"><span class="bullet red" aria-hidden="true"></span> Game Over</h3>
+        <p>
+          An honor tile hits <b>{{ config.bustLow }} or {{ config.bustHigh }}</b
+          >, or the deck empties for the <b>3rd</b> time.
+        </p>
+      </section>
+      <section class="card info-card">
+        <h3 class="info-title"><span class="bullet gold" aria-hidden="true"></span> Scoring</h3>
+        <p>
+          Each correct call scores <b>{{ config.scorePerStreak }} × your current streak</b>. Keep it
+          alive.
+        </p>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <button appNeon variant="ghost" type="button" (click)="onClose()">Back</button>
+      <button appNeon variant="primary" type="button" (click)="onStart()">Start playing</button>
+    </div>
+  </div>
+</dialog>

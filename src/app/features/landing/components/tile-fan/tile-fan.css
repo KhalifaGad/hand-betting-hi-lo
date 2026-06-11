@@ -1,0 +1,107 @@
+:host {
+  position: relative;
+  display: block;
+  height: clamp(196px, 20vw, 238px);
+  width: 100%;
+  perspective: 1200px;
+  pointer-events: none;
+  /* horizontal step + arc lift between tiles; narrowed on small screens so the
+     fanned hand never overflows the viewport */
+  --fan-spread: 80px;
+  --fan-lift: 13px;
+}
+
+@media (max-width: 560px) {
+  :host {
+    --fan-spread: 48px;
+    --fan-lift: 9px;
+  }
+}
+@media (max-width: 400px) {
+  :host {
+    --fan-spread: 32px;
+  }
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.fan-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  /* cursor parallax via PointerParallaxDirective (writes --rot-x / --rot-y) */
+  transform: rotateY(var(--rot-y, 0deg)) rotateX(var(--rot-x, 0deg));
+  transition: transform 0.25s ease;
+}
+
+.fan-tile {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform-origin: bottom center;
+  will-change: transform;
+  pointer-events: auto;
+  animation: bob 3.6s ease-in-out infinite;
+}
+.fan-tile:hover {
+  transform: translateY(-10px);
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+.caption {
+  position: absolute;
+  left: 50%;
+  bottom: -30px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.caption .pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px color-mix(in oklch, var(--color-accent) 80%, transparent);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fan-inner,
+  .fan-tile,
+  .caption .pulse {
+    animation: none;
+    transition: none;
+  }
+  .fan-tile:hover {
+    transform: none;
+  }
+}

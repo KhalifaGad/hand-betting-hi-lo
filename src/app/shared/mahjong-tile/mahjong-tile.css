@@ -1,0 +1,202 @@
+:host {
+  position: relative;
+  display: block;
+  width: var(--tw, 118px);
+  aspect-ratio: 5 / 7;
+  flex: none;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--tw, 118px) * 0.13);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(160deg, #fdfefe, #e7ecf3 70%, #d7deea);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 -7px 12px rgba(120, 140, 180, 0.32) inset,
+    0 14px 26px rgba(0, 0, 0, 0.45),
+    0 0 calc(30px * var(--glow)) color-mix(in oklch, var(--color-accent) 26%, transparent);
+}
+.face::before {
+  content: '';
+  position: absolute;
+  inset: calc(var(--tw, 118px) * 0.05);
+  border-radius: calc(var(--tw, 118px) * 0.09);
+  border: 1px solid rgba(40, 60, 90, 0.12);
+}
+
+.glyph {
+  position: relative;
+  z-index: 2;
+  font-weight: 700;
+  line-height: 1;
+  font-size: calc(var(--tw, 118px) * 0.46);
+}
+.glyph.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  font-size: calc(var(--tw, 118px) * 0.3);
+}
+.glyph.stack .num {
+  color: var(--color-g-blue);
+}
+.glyph.stack .wan {
+  color: var(--color-g-red);
+  font-size: 0.8em;
+}
+
+/* ---- number-suit pip faces — dots (circles) & bamboo ---- */
+.pips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: calc(var(--tw, 118px) * 0.035);
+  width: 76%;
+  height: 76%;
+  place-items: center;
+  position: relative;
+  z-index: 2;
+}
+.pips .sp {
+  visibility: hidden;
+}
+.pips .dot {
+  width: calc(var(--tw, 118px) * 0.185);
+  height: calc(var(--tw, 118px) * 0.185);
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 30%, #6fc0ff, #1c6ec6 72%);
+  box-shadow:
+    0 0 0 calc(var(--tw, 118px) * 0.02) rgba(255, 255, 255, 0.78) inset,
+    0 1px 2px rgba(0, 0, 0, 0.32);
+}
+.pips.bamboo .bam {
+  width: calc(var(--tw, 118px) * 0.092);
+  height: calc(var(--tw, 118px) * 0.27);
+  border-radius: calc(var(--tw, 118px) * 0.035);
+  background: linear-gradient(180deg, #4cc578, #1f8a4c);
+  position: relative;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(8, 60, 28, 0.25);
+}
+.pips.bamboo .bam::before,
+.pips.bamboo .bam::after {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  height: calc(var(--tw, 118px) * 0.018);
+  background: rgba(8, 52, 24, 0.55);
+}
+.pips.bamboo .bam::before {
+  top: 33%;
+}
+.pips.bamboo .bam::after {
+  top: 64%;
+}
+.pips.one .dot {
+  width: calc(var(--tw, 118px) * 0.34);
+  height: calc(var(--tw, 118px) * 0.34);
+  background: radial-gradient(circle at 36% 30%, #ff8d7a, #d23a2a 72%);
+}
+.pips.one .bam {
+  height: calc(var(--tw, 118px) * 0.46);
+  width: calc(var(--tw, 118px) * 0.13);
+}
+
+/* ---- honor tiles — framed dragons & lettered winds ---- */
+.honor {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+.honor .frame {
+  position: absolute;
+  inset: calc(var(--tw, 118px) * 0.135);
+  border-radius: calc(var(--tw, 118px) * 0.07);
+  border: calc(var(--tw, 118px) * 0.02) solid currentColor;
+  opacity: 0.85;
+}
+.honor .frame::after {
+  content: '';
+  position: absolute;
+  inset: calc(var(--tw, 118px) * 0.035);
+  border-radius: calc(var(--tw, 118px) * 0.05);
+  border: 1px solid currentColor;
+  opacity: 0.45;
+}
+.honor.g-red {
+  color: var(--color-g-red);
+}
+.honor.g-green {
+  color: var(--color-g-green);
+}
+.honor.g-blue {
+  color: var(--color-g-blue);
+}
+.honor .hglyph {
+  position: relative;
+  z-index: 2;
+  font-size: calc(var(--tw, 118px) * 0.4);
+  text-shadow:
+    0 calc(var(--tw, 118px) * 0.01) 0 rgba(255, 255, 255, 0.55),
+    0 calc(var(--tw, 118px) * -0.006) 0 rgba(0, 0, 0, 0.12);
+}
+.honor.wind .hglyph {
+  font-size: calc(var(--tw, 118px) * 0.46);
+}
+.honor.wind .wletter {
+  position: absolute;
+  top: calc(var(--tw, 118px) * 0.085);
+  left: calc(var(--tw, 118px) * 0.1);
+  z-index: 3;
+  font-weight: 700;
+  font-size: calc(var(--tw, 118px) * 0.13);
+  color: #67739a;
+  letter-spacing: 0.02em;
+}
+
+/* ink colors for glyphs */
+.g-red {
+  color: var(--color-g-red);
+}
+.g-green {
+  color: var(--color-g-green);
+}
+.g-blue {
+  color: var(--color-g-blue);
+}
+.g-ink {
+  color: var(--color-g-ink);
+}
+
+/* ---- dynamic value badge (honors) ---- */
+.badge {
+  position: absolute;
+  top: calc(var(--tw, 118px) * 0.06);
+  right: calc(var(--tw, 118px) * 0.06);
+  z-index: 3;
+  min-width: calc(var(--tw, 118px) * 0.24);
+  height: calc(var(--tw, 118px) * 0.24);
+  padding: 0 4px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: calc(var(--tw, 118px) * 0.16);
+  color: #fff;
+  background: linear-gradient(150deg, #1a2336, #0d1422);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
