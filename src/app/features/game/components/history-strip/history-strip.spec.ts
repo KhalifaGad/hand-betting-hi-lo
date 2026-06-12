@@ -4,7 +4,7 @@ import { HistoryStripComponent } from './history-strip';
 
 const ENTRIES: HistoryEntry[] = [
   { hand: [{ kind: 'num', value: 8, suit: 'bamboo' }], total: 11, dir: 'higher', result: 'win' },
-  { hand: [{ kind: 'honor', id: 'white' }], total: 11, dir: 'lower', result: 'lose' },
+  { hand: [{ kind: 'honor', honorId: 'whiteDragon' }], total: 11, dir: 'lower', result: 'lose' },
   { hand: [{ kind: 'num', value: 5, suit: 'dots' }], total: 7, dir: 'lower', result: 'push' },
 ];
 

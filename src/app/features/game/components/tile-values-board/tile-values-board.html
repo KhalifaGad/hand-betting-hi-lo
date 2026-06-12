@@ -7,29 +7,44 @@
   [attr.role]="embedded() ? 'group' : null"
   [attr.aria-label]="embedded() ? 'Tile values, scrollable' : null"
 >
-  @for (row of rows(); track row.honor.id) {
+  @for (row of rows(); track row.honor.honorId) {
     <div
       class="vrow"
-      [class.danger]="row.honor.danger"
-      [class.changed]="fx()[row.honor.id]"
+      [class.danger]="row.danger"
+      [class.changed]="delta()[row.honor.honorId]"
       role="group"
-      [attr.aria-label]="row.honor.name + ', value ' + row.honor.value + ' of 10'"
+      [attr.aria-label]="
+        row.honor.name +
+        ', ' +
+        row.count +
+        ' copies' +
+        (row.riskCount > 0 ? ', ' + row.riskCount + ' near out' : ', all safe')
+      "
     >
       <app-mahjong-tile class="vchip" [tile]="row.tile" [size]="38" />
       <div class="vmid">
         <div class="vname">
           {{ row.honor.name }}
-          @if (fx()[row.honor.id]; as f) {
-            <span class="delta show" [class.up]="f.dir === 'up'" [class.down]="f.dir === 'down'">
-              {{ f.delta }}
+          @if (delta()[row.honor.honorId]; as d) {
+            <span class="delta show" [class.up]="d === '▲'" [class.down]="d === '▼'">{{ d }}</span>
+          }
+        </div>
+        <div class="swarm" aria-hidden="true">
+          @for (m of row.markers; track m.key) {
+            <span class="dot" [class.edge]="m.edge" [style.left.%]="m.left" [style.--off.px]="m.offset">
+              <span class="core" [class.pulse]="changedKeys().has(m.key)"></span>
             </span>
           }
         </div>
-        <div class="track" aria-hidden="true">
-          <div class="fill" [style.width]="fillWidth(row.honor.value)"></div>
-        </div>
       </div>
-      <div class="vval mono" [appCountPop]="row.honor.value">{{ row.honor.value }}</div>
+      <div class="vright">
+        <div class="count mono" [appCountPop]="row.count">×{{ row.count }}</div>
+        @if (row.riskCount > 0) {
+          <div class="risk warn"><span aria-hidden="true">⚠</span> {{ row.riskCount }}</div>
+        } @else {
+          <div class="risk">safe</div>
+        }
+      </div>
     </div>
   }
 </div>

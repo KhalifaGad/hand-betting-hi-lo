@@ -49,10 +49,10 @@ export class LandingPageComponent {
 
   /** Decorative opening hand for the hero fan. */
   protected readonly fanHand: Tile[] = [
-    { kind: 'honor', id: 'E' },
+    { kind: 'honor', honorId: 'eastWind' },
     { kind: 'num', value: 6, suit: 'dots' },
-    { kind: 'honor', id: 'red' },
-    { kind: 'honor', id: 'green' },
+    { kind: 'honor', honorId: 'redDragon' },
+    { kind: 'honor', honorId: 'greenDragon' },
     { kind: 'num', value: 5, suit: 'chars' },
   ];
 

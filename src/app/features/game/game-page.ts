@@ -23,7 +23,7 @@ import { ResultBannerComponent } from './components/result-banner/result-banner'
 import { TileValuesBoardComponent } from './components/tile-values-board/tile-values-board';
 import { GameOver } from './models/game-view.model';
 import { BetDirection, GAME_SERVICE } from './services/game.service';
-import { MockGameService } from './services/game.mock';
+import { GameEngineService } from './services/game-engine';
 
 /**
  * Smart-but-thin game container. Reads the {@link GameView} signal from the
@@ -47,7 +47,7 @@ import { MockGameService } from './services/game.mock';
     GameOverOverlayComponent,
     GameDrawerComponent,
   ],
-  providers: [{ provide: GAME_SERVICE, useClass: MockGameService }],
+  providers: [{ provide: GAME_SERVICE, useClass: GameEngineService }],
   templateUrl: './game-page.html',
   styleUrl: './game-page.css',
   host: {
@@ -70,14 +70,17 @@ export class GamePageComponent {
   /** A dev-only game-over preview toggled with `G` (no real rules involved). */
   private readonly preview = signal<GameOver | null>(null);
 
+  /** True from a bet until the dealt hand settles in place (Hand's `revealed`). */
+  private readonly animating = signal(false);
+
   private readonly toast = viewChild.required(ReshuffleToastComponent);
 
   /** Real game over wins; otherwise the keyboard preview, if any. */
   protected readonly overlayData = computed(() => this.view().gameOver ?? this.preview());
 
-  /** Bet buttons are off while a hand resolves or the summary is up. */
+  /** Bet buttons are off while the hand animates or the summary is up. */
   protected readonly betsDisabled = computed(
-    () => this.view().resolving || this.overlayData() !== null,
+    () => this.animating() || this.overlayData() !== null,
   );
 
   /** The most recent resolved bet (newest history entry), for the banner. */
@@ -98,6 +101,20 @@ export class GamePageComponent {
   }
 
   protected onBet(direction: BetDirection): void {
+    this.placeBet(direction);
+  }
+
+  /** Re-enable betting once the new hand has settled in place. */
+  protected onRevealed(): void {
+    this.animating.set(false);
+  }
+
+  /** Single entry point for a bet: gate, mark animating, delegate to the engine. */
+  private placeBet(direction: BetDirection): void {
+    if (this.betsDisabled()) {
+      return;
+    }
+    this.animating.set(true);
     this.game.bet(direction);
   }
 
@@ -116,11 +133,11 @@ export class GamePageComponent {
 
   /** ← / → place a bet, unless a control is focused-with-intent or play is paused. */
   protected onKey(event: Event, direction: BetDirection): void {
-    if (this.shouldIgnore(event) || this.betsDisabled()) {
+    if (this.shouldIgnore(event)) {
       return;
     }
     event.preventDefault();
-    this.game.bet(direction);
+    this.placeBet(direction);
   }
 
   /** `G` toggles the game-over summary preview (skipped during a real game over). */

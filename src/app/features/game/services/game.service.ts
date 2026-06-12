@@ -15,8 +15,6 @@ export interface GameService {
   bet(direction: BetDirection): void;
   /** Start a fresh game. */
   newGame(): void;
-  /** Reset all state back to a new game. */
-  reset(): void;
 }
 
 /** DI token for {@link GameService} — provided per the game feature. */

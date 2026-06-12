@@ -43,8 +43,8 @@ export class HowToPlayComponent {
 
   /** Example honor tiles (a dragon + a wind), shown with their starting badge. */
   protected readonly honorTiles: Tile[] = [
-    { kind: 'honor', id: 'red' },
-    { kind: 'honor', id: 'E' },
+    { kind: 'honor', honorId: 'redDragon' },
+    { kind: 'honor', honorId: 'eastWind' },
   ];
 
   constructor() {

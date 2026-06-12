@@ -48,12 +48,26 @@ describe('GamePageComponent', () => {
     expect(bet).toHaveBeenCalledWith('higher');
   });
 
-  it('maps the ← / → keys to lower / higher bets', () => {
+  it('maps ← to a lower bet and → to a higher bet', () => {
+    const left = create();
+    const leftBet = vi.spyOn(left.service, 'bet');
+    left.host.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+    expect(leftBet).toHaveBeenCalledWith('lower');
+
+    const right = create();
+    const rightBet = vi.spyOn(right.service, 'bet');
+    right.host.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    expect(rightBet).toHaveBeenCalledWith('higher');
+  });
+
+  it('ignores further bets until the dealt hand is revealed', () => {
     const { host, service } = create();
     const bet = vi.spyOn(service, 'bet');
+    // first bet starts the deal animation (buttons gated until `revealed`)
     host.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
     host.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
-    expect(bet.mock.calls.map((c) => c[0])).toEqual(['lower', 'higher']);
+    expect(bet).toHaveBeenCalledTimes(1);
+    expect(bet).toHaveBeenCalledWith('lower');
   });
 
   it('toggles the game-over summary preview with G', () => {

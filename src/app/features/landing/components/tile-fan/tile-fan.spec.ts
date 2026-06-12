@@ -3,11 +3,11 @@ import { Tile } from '@core';
 import { TileFanComponent } from './tile-fan';
 
 const FIVE_TILES: Tile[] = [
-  { kind: 'honor', id: 'E' },
+  { kind: 'honor', honorId: 'eastWind' },
   { kind: 'num', value: 1, suit: 'dots' },
-  { kind: 'honor', id: 'red' },
+  { kind: 'honor', honorId: 'redDragon' },
   { kind: 'num', value: 2, suit: 'dots' },
-  { kind: 'honor', id: 'green' },
+  { kind: 'honor', honorId: 'greenDragon' },
 ];
 
 describe('TileFanComponent', () => {

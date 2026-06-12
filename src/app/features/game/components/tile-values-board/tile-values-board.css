@@ -47,62 +47,111 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   white-space: nowrap;
-}
-.track {
-  position: relative;
-  height: 6px;
-  border-radius: 4px;
-  margin-top: 7px;
   overflow: hidden;
-  background: linear-gradient(
-    90deg,
-    color-mix(in oklch, var(--color-lose) 55%, transparent),
-    var(--line) 22% 78%,
-    color-mix(in oklch, var(--color-lose) 55%, transparent)
-  );
-}
-.fill {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: 4px;
-  background: linear-gradient(
-    90deg,
-    var(--color-accent),
-    color-mix(in oklch, var(--color-accent) 60%, var(--color-accent-2))
-  );
-  transition: width 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.vval {
-  font-size: 20px;
-  font-weight: 700;
-  width: 26px;
-  text-align: right;
+  text-overflow: ellipsis;
 }
 
-/* danger (≤ dangerLow / ≥ dangerHigh) */
+/* swarm track: a 0–10 scale carrying one dot per live copy. The red-tinted
+   bands at each end (0–20% and 80–100%) mark the edge / danger zones. */
+.swarm {
+  position: relative;
+  height: 28px;
+  margin-top: 6px;
+  border-radius: 7px;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--color-lose) 26%, transparent) 0%,
+      transparent var(--edge-low, 20%),
+      transparent var(--edge-high, 80%),
+      color-mix(in oklch, var(--color-lose) 26%, transparent) 100%
+    ),
+    var(--line-soft);
+  border: 1px solid var(--line-soft);
+}
+
+.dot {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-50%, -50%) translateY(var(--off, 0px));
+  transition: left 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.core {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.85), transparent 45%),
+    linear-gradient(155deg, var(--color-accent), var(--color-accent-2));
+  /* A dark ring separates overlapping dots in a dense stack; the glow is kept
+     soft so individual borders stay legible when copies pile up at one value. */
+  box-shadow:
+    0 0 0 1px rgba(7, 10, 18, 0.65),
+    0 0 4px color-mix(in oklch, var(--color-accent) 40%, transparent),
+    0 1px 2px rgba(0, 0, 0, 0.5);
+}
+/* edge band (value ≤ dangerLow / ≥ dangerHigh): this copy is close to out */
+.dot.edge .core {
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.85), transparent 45%),
+    var(--color-lose);
+  box-shadow:
+    0 0 0 1px rgba(7, 10, 18, 0.65),
+    0 0 5px color-mix(in oklch, var(--color-lose) 50%, transparent),
+    0 1px 2px rgba(0, 0, 0, 0.5);
+}
+.core.pulse {
+  animation: dot-pulse 0.5s ease;
+}
+@keyframes dot-pulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.55);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.vright {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 30px;
+}
+.count {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+.risk {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--color-faint);
+}
+.risk.warn {
+  color: var(--color-lose);
+  font-weight: 600;
+}
+
+/* danger row: at least one copy in the edge band */
 .vrow.danger {
   border-color: color-mix(in oklch, var(--color-lose) 50%, transparent);
   background: color-mix(in oklch, var(--color-lose) 12%, var(--panel));
 }
-.vrow.danger .vval {
+.vrow.danger .count {
   color: var(--color-lose);
   text-shadow: 0 0 14px color-mix(in oklch, var(--color-lose) 50%, transparent);
 }
-.vrow.danger .fill {
-  background: var(--color-lose);
-}
 
-/* change flash */
+/* change flash on the row whose copy just drifted */
 .vrow.changed {
   border-color: color-mix(in oklch, var(--color-accent) 38%, var(--line));
-}
-.vrow.changed .fill {
-  filter: brightness(1.45);
-}
-.vrow.changed:not(.danger) .vval {
-  color: var(--color-accent);
 }
 
 .delta {
@@ -135,9 +184,10 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .fill {
+  .dot {
     transition: none;
   }
+  .core.pulse,
   .delta.show {
     animation: none;
   }

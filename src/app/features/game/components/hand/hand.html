@@ -1,19 +1,18 @@
 <div class="hand-label">Your hand</div>
-<div class="cards">
-  @for (tile of tiles(); track $index) {
+<div class="cards" [style.--n]="display().length">
+  @for (tile of display(); track tile) {
     <app-mahjong-tile
       [tile]="tile"
       [size]="118"
-      [class.dealing]="phase() === 'entrance'"
       [class.leaving]="phase() === 'leaving'"
-      [class.dealin]="phase() === 'dealing'"
-      [class.flash-win]="flashClass() === 'flash-win'"
-      [class.flash-lose]="flashClass() === 'flash-lose'"
+      [class.entering]="phase() === 'entering'"
+      [class.win]="phase() === 'entering' && flash() === 'win'"
+      [class.lose]="phase() === 'entering' && flash() === 'lose'"
       [style.animationDelay]="delay($index)"
     />
   }
 </div>
 <div class="total">
   <span>Total</span>
-  <b class="mono">{{ total() }}</b>
+  <b class="mono" [appCountPop]="displayTotal()">{{ displayTotal() }}</b>
 </div>

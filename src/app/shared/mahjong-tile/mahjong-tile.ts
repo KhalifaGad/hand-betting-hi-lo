@@ -38,7 +38,7 @@ export class MahjongTileComponent {
   protected readonly mode = computed<TileMode>(() => {
     const tile = this.tile();
     if (tile.kind === 'honor') {
-      return HONOR_META[tile.id].type === 'dragon' ? 'dragon' : 'wind';
+      return HONOR_META[tile.honorId].type === 'dragon' ? 'dragon' : 'wind';
     }
     return tile.suit;
   });
@@ -46,7 +46,7 @@ export class MahjongTileComponent {
   /** Honor metadata, or null for numbered tiles. */
   protected readonly honor = computed(() => {
     const tile = this.tile();
-    return tile.kind === 'honor' ? HONOR_META[tile.id] : null;
+    return tile.kind === 'honor' ? HONOR_META[tile.honorId] : null;
   });
 
   /** Chinese numeral for the character suit. */
@@ -73,7 +73,7 @@ export class MahjongTileComponent {
   protected readonly ariaLabel = computed(() => {
     const tile = this.tile();
     if (tile.kind === 'honor') {
-      const name = HONOR_META[tile.id].name;
+      const name = HONOR_META[tile.honorId].name;
       return this.showBadgeValue() ? `${name}, value ${this.badgeValue()}` : name;
     }
     return `${tile.value} of ${suitLabel(tile.suit)}`;

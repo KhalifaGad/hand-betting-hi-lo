@@ -1,20 +1,27 @@
 import { HonorId, Tile } from '@core';
 
-/** A row on the tile-values board (one per honor tile). */
-export interface HonorValue {
-  id: HonorId;
+/**
+ * One row on the tile-values board: a single honor TYPE plus the live roster
+ * of every physical copy of it in play. `values` carries one value (0–10) per
+ * copy and GROWS on reshuffle (each reshuffle merges a fresh deck in), so the
+ * board renders `values.length` markers and adapts to any `COPIES_PER_HONOR`.
+ */
+export interface HonorDistribution {
+  honorId: HonorId;
   name: string;
   glyph: string;
-  value: number;
-  danger: boolean;
+  /** One value (0–10) per live copy of this honor type; length grows on reshuffle. */
+  values: number[];
 }
+
+export type RoundResult = 'win' | 'lose' | 'push';
 
 /** A resolved previous hand shown in the history strip. */
 export interface HistoryEntry {
   hand: Tile[];
   total: number;
   dir: 'higher' | 'lower';
-  result: 'win' | 'lose' | 'push';
+  result: RoundResult;
 }
 
 /** End-of-game summary, or `null` while play continues. */
@@ -40,8 +47,7 @@ export interface GameView {
   round: number;
   score: number;
   streak: number;
-  honors: HonorValue[];
+  honors: HonorDistribution[];
   history: HistoryEntry[];
-  resolving: boolean;
   gameOver: GameOver | null;
 }

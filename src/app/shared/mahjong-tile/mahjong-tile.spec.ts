@@ -31,12 +31,12 @@ describe('MahjongTileComponent', () => {
   });
 
   it('uses the honor name as the aria-label for an honor tile', () => {
-    const { host } = render({ tile: { kind: 'honor', id: 'red' } });
+    const { host } = render({ tile: { kind: 'honor', honorId: 'redDragon' } });
     expect(host.getAttribute('aria-label')).toBe('Red Dragon');
   });
 
   it('shows the badge value and folds it into the aria-label when showBadge is set', () => {
-    const { host } = render({ tile: { kind: 'honor', id: 'red' }, showBadge: true, badgeValue: 7 });
+    const { host } = render({ tile: { kind: 'honor', honorId: 'redDragon' }, showBadge: true, badgeValue: 7 });
     expect(host.querySelector('.badge')?.textContent?.trim()).toBe('7');
     expect(host.getAttribute('aria-label')).toBe('Red Dragon, value 7');
   });

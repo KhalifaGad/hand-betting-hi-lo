@@ -4,12 +4,14 @@ import {
   computed,
   effect,
   ElementRef,
+  inject,
   input,
   signal,
   viewChild,
 } from '@angular/core';
+import { GAME_CONFIG } from '@core';
 import { HistoryEntry } from '../../models/game-view.model';
-import { HonorValue } from '../../models/game-view.model';
+import { HonorDistribution } from '../../models/game-view.model';
 import { HistoryStripComponent } from '../history-strip/history-strip';
 import { TileValuesBoardComponent } from '../tile-values-board/tile-values-board';
 
@@ -30,14 +32,20 @@ type DrawerTab = 'values' | 'history';
   host: { '(keydown.escape)': 'open.set(false)' },
 })
 export class GameDrawerComponent {
-  readonly honors = input<HonorValue[]>([]);
+  readonly honors = input<HonorDistribution[]>([]);
   readonly history = input<HistoryEntry[]>([]);
+
+  private readonly config = inject(GAME_CONFIG);
 
   protected readonly open = signal(false);
   protected readonly tab = signal<DrawerTab>('values');
 
-  /** Honor tiles currently in the danger band — surfaced on the collapsed bar. */
-  protected readonly atRisk = computed(() => this.honors().filter((h) => h.danger).length);
+  /** Honor TYPES with at least one copy in the danger band — surfaced on the collapsed bar. */
+  protected readonly atRisk = computed(() => {
+    const { dangerLow, dangerHigh } = this.config;
+    return this.honors().filter((h) => h.values.some((v) => v <= dangerLow || v >= dangerHigh))
+      .length;
+  });
 
   private readonly closeButton = viewChild<ElementRef<HTMLButtonElement>>('closeButton');
 

@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HonorValue } from '../../models/game-view.model';
+import { HonorDistribution } from '../../models/game-view.model';
 import { GameDrawerComponent } from './game-drawer';
 
-const HONORS: HonorValue[] = [
-  { id: 'red', name: 'Red Dragon', glyph: '中', value: 7, danger: false },
-  { id: 'W', name: 'West Wind', glyph: '西', value: 8, danger: true },
-  { id: 'N', name: 'North Wind', glyph: '北', value: 3, danger: false },
+const HONORS: HonorDistribution[] = [
+  { honorId: 'redDragon', name: 'Red Dragon', glyph: '中', values: [5, 6, 6] },
+  { honorId: 'westWind', name: 'West Wind', glyph: '西', values: [5, 8, 6] },
+  { honorId: 'northWind', name: 'North Wind', glyph: '北', values: [5, 4, 4] },
 ];
 
 describe('GameDrawerComponent', () => {

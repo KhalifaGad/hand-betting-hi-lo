@@ -2,8 +2,14 @@ import { HonorId, TileNumber } from '@core';
 import { HONOR_META, NUM_CN, PIP, suitLabel } from './tile-presentation';
 
 const NUMBERS: TileNumber[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-const DRAGONS: HonorId[] = ['red', 'green', 'white'];
-const WINDS: HonorId[] = ['E', 'S', 'W', 'N'];
+const DRAGONS: HonorId[] = ['redDragon', 'greenDragon', 'whiteDragon'];
+const WINDS: HonorId[] = ['eastWind', 'southWind', 'westWind', 'northWind'];
+const WIND_LETTERS: Record<HonorId, string> = {
+  eastWind: 'E',
+  southWind: 'S',
+  westWind: 'W',
+  northWind: 'N',
+} as Record<HonorId, string>;
 
 describe('tile-presentation', () => {
   describe('suitLabel', () => {
@@ -48,7 +54,7 @@ describe('tile-presentation', () => {
     it('marks the four winds as type "wind" and gives them a letter', () => {
       for (const id of WINDS) {
         expect(HONOR_META[id].type).toBe('wind');
-        expect(HONOR_META[id].letter).toBe(id);
+        expect(HONOR_META[id].letter).toBe(WIND_LETTERS[id]);
       }
     });
   });

@@ -17,15 +17,36 @@
 }
 
 .cards {
+  --gap: clamp(8px, 1.4vw, 20px);
+  /* Full design size by default (desktop/tablet are roomy — unchanged). */
+  --card: 118px;
   display: flex;
-  gap: clamp(14px, 1.4vw, 20px);
+  gap: var(--gap);
   align-items: flex-end;
   min-height: 0;
   perspective: 1300px;
 }
 
+/* Drive every tile off the computed width (overrides the component's px default). */
 .cards app-mahjong-tile {
+  --tw: var(--card) !important;
   transition: transform 0.2s ease;
+}
+
+/* Mobile only: the layout is single-column here, so a large hand (e.g. 4 tiles)
+   can overflow a narrow phone. Shrink the card to share the viewport width
+   across `--n` cards — capped at 118px, so a 2-card hand still renders at full
+   size. The subtractions mirror the page shell's horizontal padding + the gaps,
+   so the row fits exactly. `--n` is set per-render (falls back to 2). */
+@media (max-width: 760px) {
+  .cards {
+    --card: min(
+      118px,
+      calc(
+        (100vw - 2 * clamp(18px, 3vw, 40px) - (var(--n, 2) - 1) * var(--gap)) / var(--n, 2)
+      )
+    );
+  }
 }
 .cards app-mahjong-tile:hover {
   transform: translateY(-9px);
@@ -51,30 +72,14 @@
   text-shadow: 0 0 calc(40px * var(--glow)) color-mix(in oklch, var(--color-accent) 40%, transparent);
 }
 
-/* ---- choreography (applied to the tile host element) ---- */
-.cards app-mahjong-tile.dealing {
-  animation: hand-deal 0.42s cubic-bezier(0.2, 0.85, 0.25, 1) backwards;
-}
-@keyframes hand-deal {
-  from {
-    transform: translateY(26px) rotate(-6deg) scale(0.92);
-  }
-}
+/* ---- choreography (sequential leave → enter, glow folded into the landing) ----
+   Beats advance by counting animationend events, never by matching keyframe
+   names (Angular scopes those). Every animation ends at a resting state, so a
+   disabled/throttled timeline still lands face-up correctly. */
 
-.cards app-mahjong-tile.dealin {
-  animation: hand-dealflip 0.55s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
-}
-@keyframes hand-dealflip {
-  from {
-    transform: translate(-150px, -14px) rotateY(82deg) scale(0.9);
-  }
-  60% {
-    transform: translate(0, 0) rotateY(-8deg) scale(1);
-  }
-}
-
+/* leave: fling the outgoing tiles toward the discard pile */
 .cards app-mahjong-tile.leaving {
-  animation: hand-leave 0.24s ease-in forwards;
+  animation: hand-leave 0.2s ease-in forwards;
 }
 @keyframes hand-leave {
   to {
@@ -83,30 +88,83 @@
   }
 }
 
-.cards app-mahjong-tile.flash-win {
-  animation: tile-flash-win 0.6s ease;
+/* enter: slide from the deck + flip onto the table (punchy settle) */
+.cards app-mahjong-tile.entering {
+  animation: hand-enter 0.42s cubic-bezier(0.2, 0.85, 0.25, 1) backwards;
 }
-.cards app-mahjong-tile.flash-lose {
-  animation: tile-flash-lose 0.6s ease;
+/* win/lose: same deal-in, with a green/red glow pulsing through the landing */
+/* longer total duration than the plain enter: the tiles still LAND by ~32%
+   (same snap), the remaining time is purely the glow swelling + holding so the
+   flash reads clearly instead of blinking. */
+.cards app-mahjong-tile.entering.win {
+  animation: hand-enter-win 0.75s cubic-bezier(0.2, 0.85, 0.25, 1) backwards;
 }
-@keyframes tile-flash-win {
-  50% {
-    filter: drop-shadow(0 0 18px color-mix(in oklch, var(--color-win) 85%, transparent));
+.cards app-mahjong-tile.entering.lose {
+  animation: hand-enter-lose 0.75s cubic-bezier(0.2, 0.85, 0.25, 1) backwards;
+}
+@keyframes hand-enter {
+  from {
+    transform: translate(-150px, -14px) rotateY(82deg) scale(0.9);
+  }
+  55% {
+    transform: translate(0, 0) rotateY(-7deg) scale(1);
   }
 }
-@keyframes tile-flash-lose {
-  50% {
-    filter: drop-shadow(0 0 18px color-mix(in oklch, var(--color-lose) 85%, transparent));
+@keyframes hand-enter-win {
+  0% {
+    transform: translate(-150px, -14px) rotateY(82deg) scale(0.9);
+    filter: none;
+  }
+  32% {
+    transform: translate(0, 0) rotateY(-7deg) scale(1);
+    filter: none;
+  }
+  46% {
+    transform: none;
+    filter: none;
+  }
+  64% {
+    filter: drop-shadow(0 0 22px color-mix(in oklch, var(--color-win) 90%, transparent));
+  }
+  82% {
+    filter: drop-shadow(0 0 22px color-mix(in oklch, var(--color-win) 90%, transparent));
+  }
+  100% {
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes hand-enter-lose {
+  0% {
+    transform: translate(-150px, -14px) rotateY(82deg) scale(0.9);
+    filter: none;
+  }
+  32% {
+    transform: translate(0, 0) rotateY(-7deg) scale(1);
+    filter: none;
+  }
+  46% {
+    transform: none;
+    filter: none;
+  }
+  64% {
+    filter: drop-shadow(0 0 22px color-mix(in oklch, var(--color-lose) 90%, transparent));
+  }
+  82% {
+    filter: drop-shadow(0 0 22px color-mix(in oklch, var(--color-lose) 90%, transparent));
+  }
+  100% {
+    transform: none;
+    filter: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .cards app-mahjong-tile,
-  .cards app-mahjong-tile.dealing,
-  .cards app-mahjong-tile.dealin,
   .cards app-mahjong-tile.leaving,
-  .cards app-mahjong-tile.flash-win,
-  .cards app-mahjong-tile.flash-lose {
+  .cards app-mahjong-tile.entering,
+  .cards app-mahjong-tile.entering.win,
+  .cards app-mahjong-tile.entering.lose {
     animation: none;
     transition: none;
   }

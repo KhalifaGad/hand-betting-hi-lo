@@ -38,13 +38,13 @@ export const PIP: Record<TileNumber, readonly boolean[]> = {
 
 /** Static presentation metadata for each honor tile. */
 export const HONOR_META: Record<HonorId, HonorMeta> = {
-  red: { glyph: '中', name: 'Red Dragon', ink: 'g-red', type: 'dragon' },
-  green: { glyph: '發', name: 'Green Dragon', ink: 'g-green', type: 'dragon' },
-  white: { glyph: '白', name: 'White Dragon', ink: 'g-blue', type: 'dragon' },
-  E: { glyph: '東', name: 'East Wind', ink: 'g-ink', type: 'wind', letter: 'E' },
-  S: { glyph: '南', name: 'South Wind', ink: 'g-ink', type: 'wind', letter: 'S' },
-  W: { glyph: '西', name: 'West Wind', ink: 'g-ink', type: 'wind', letter: 'W' },
-  N: { glyph: '北', name: 'North Wind', ink: 'g-ink', type: 'wind', letter: 'N' },
+  redDragon: { glyph: '中', name: 'Red Dragon', ink: 'g-red', type: 'dragon' },
+  greenDragon: { glyph: '發', name: 'Green Dragon', ink: 'g-green', type: 'dragon' },
+  whiteDragon: { glyph: '白', name: 'White Dragon', ink: 'g-blue', type: 'dragon' },
+  eastWind: { glyph: '東', name: 'East Wind', ink: 'g-ink', type: 'wind', letter: 'E' },
+  southWind: { glyph: '南', name: 'South Wind', ink: 'g-ink', type: 'wind', letter: 'S' },
+  westWind: { glyph: '西', name: 'West Wind', ink: 'g-ink', type: 'wind', letter: 'W' },
+  northWind: { glyph: '北', name: 'North Wind', ink: 'g-ink', type: 'wind', letter: 'N' },
 };
 
 const SUIT_LABEL: Record<Suit, string> = {

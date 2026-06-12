@@ -19,17 +19,23 @@ export interface GameConfig {
   bustHigh: number;
   /** Points awarded per win, multiplied by the current streak. */
   scorePerStreak: number;
+  /** Number of times each tile is repeated in the pile. mahjong defaults is 4. */
+  tileRepetition: number;
+  /** Number of tiles in a hand. */
+  handSize: number;
 }
 
 /** Default rules, matching the design handoff. */
 export const DEFAULT_GAME_CONFIG: GameConfig = {
   maxReshuffles: 3,
   honorStart: 5,
-  dangerLow: 2,
-  dangerHigh: 8,
+  dangerLow: 3,
+  dangerHigh: 7,
   bustLow: 0,
   bustHigh: 10,
   scorePerStreak: 100,
+  tileRepetition: 4,
+  handSize: 2,
 };
 
 /** DI token so the config can be overridden per app/test. */

@@ -28,8 +28,8 @@
       <app-hand
         [hand]="view().hand"
         [total]="view().total"
-        [resolving]="view().resolving"
         [flash]="handFlash()"
+        (revealed)="onRevealed()"
       />
       <app-bet-controls [disabled]="betsDisabled()" (bet)="onBet($event)" />
     </section>

@@ -3,16 +3,28 @@ import { Tile } from '@core';
 import { HandComponent } from './hand';
 
 const HAND: Tile[] = [
-  { kind: 'honor', id: 'red' },
   { kind: 'num', value: 5, suit: 'dots' },
+  { kind: 'num', value: 3, suit: 'bamboo' },
 ];
+const NEXT: Tile[] = [{ kind: 'num', value: 9, suit: 'chars' }];
+
+/** Stub matchMedia so the reduced-motion branch is deterministic per test. */
+function setReducedMotion(reduce: boolean): void {
+  (globalThis as unknown as { matchMedia: (q: string) => MediaQueryList }).matchMedia = (q) =>
+    ({ matches: reduce, media: q }) as MediaQueryList;
+}
 
 describe('HandComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [HandComponent] });
+    setReducedMotion(false);
   });
 
-  function create(hand: Tile[] = HAND, total = 12) {
+  afterEach(() => {
+    delete (globalThis as unknown as { matchMedia?: unknown }).matchMedia;
+  });
+
+  function create(hand: Tile[] = HAND, total = 8) {
     const fixture = TestBed.createComponent(HandComponent);
     fixture.componentRef.setInput('hand', hand);
     fixture.componentRef.setInput('total', total);
@@ -20,56 +32,90 @@ describe('HandComponent', () => {
     return fixture;
   }
 
-  /** Fire one animationend with a given keyframe name, per tile on the table. */
-  function endAnimation(fixture: ComponentFixture<HandComponent>, name: string): void {
+  function endBeat(fixture: ComponentFixture<HandComponent>, count: number) {
     const host = fixture.nativeElement as HTMLElement;
-    const count = host.querySelectorAll('app-mahjong-tile').length;
     for (let i = 0; i < count; i++) {
-      const event = new Event('animationend');
-      Object.defineProperty(event, 'animationName', { value: name });
-      host.dispatchEvent(event);
+      host.dispatchEvent(new Event('animationend', { bubbles: true }));
     }
     fixture.detectChanges();
   }
 
+  function tileCount(fixture: ComponentFixture<HandComponent>): number {
+    return (fixture.nativeElement as HTMLElement).querySelectorAll('app-mahjong-tile').length;
+  }
+
+  function totalText(fixture: ComponentFixture<HandComponent>): string {
+    return (fixture.nativeElement as HTMLElement).querySelector('.total b')?.textContent?.trim() ?? '';
+  }
+
   it('renders a tile per hand entry and the total', () => {
-    const host = create().nativeElement as HTMLElement;
-    expect(host.querySelectorAll('app-mahjong-tile').length).toBe(2);
-    expect(host.querySelector('.total b')?.textContent?.trim()).toBe('12');
+    const fixture = create();
+    expect(tileCount(fixture)).toBe(2);
+    expect(totalText(fixture)).toBe('8');
   });
 
-  it('plays the entrance deal, then settles to the resting state', () => {
-    const fixture = create();
-    const host = fixture.nativeElement as HTMLElement;
-    expect(host.querySelector('app-mahjong-tile')?.classList.contains('dealing')).toBe(true);
-    endAnimation(fixture, 'hand-deal');
-    expect(host.querySelector('app-mahjong-tile')?.classList.contains('dealing')).toBe(false);
+  it('leaves, deals in, then reveals the new total a hair before settling', () => {
+    vi.useFakeTimers();
+    try {
+      const fixture = create();
+      vi.advanceTimersByTime(400); // let the initial entrance reveal fire
+      fixture.detectChanges();
+
+      let revealed = 0;
+      fixture.componentInstance.revealed.subscribe(() => revealed++);
+
+      fixture.componentRef.setInput('hand', NEXT);
+      fixture.componentRef.setInput('total', 9);
+      fixture.detectChanges();
+
+      // leave beat: still showing the OLD hand and OLD total
+      expect(tileCount(fixture)).toBe(2);
+      expect(totalText(fixture)).toBe('8');
+      expect(revealed).toBe(0);
+
+      endBeat(fixture, 2); // leave done → deal the new hand in
+      expect(tileCount(fixture)).toBe(1);
+      expect(totalText(fixture)).toBe('8'); // total still buffered
+      expect(revealed).toBe(0);
+
+      vi.advanceTimersByTime(320); // reveal moment
+      fixture.detectChanges();
+      expect(totalText(fixture)).toBe('9'); // total flips with the landing
+      expect(revealed).toBe(1);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
-  it('flings the old hand out, then deals the new hand in on change', () => {
-    const fixture = create();
-    endAnimation(fixture, 'hand-deal'); // settle the entrance first
-    const host = fixture.nativeElement as HTMLElement;
+  it('marks the entering tiles with the win glow class', () => {
+    vi.useFakeTimers();
+    try {
+      const fixture = create();
+      vi.advanceTimersByTime(400);
+      fixture.componentRef.setInput('flash', 'win');
+      fixture.componentRef.setInput('hand', NEXT);
+      fixture.detectChanges();
+      endBeat(fixture, 2); // leave → enter
+      const tile = (fixture.nativeElement as HTMLElement).querySelector('app-mahjong-tile');
+      expect(tile?.classList.contains('entering')).toBe(true);
+      expect(tile?.classList.contains('win')).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 
-    fixture.componentRef.setInput('hand', [{ kind: 'num', value: 9, suit: 'chars' } as Tile]);
+  it('swaps immediately and reveals without animation under reduced motion', () => {
+    setReducedMotion(true);
+    const fixture = create();
+    let revealed = 0;
+    fixture.componentInstance.revealed.subscribe(() => revealed++);
+
+    fixture.componentRef.setInput('hand', NEXT);
+    fixture.componentRef.setInput('total', 9);
     fixture.detectChanges();
-    expect(host.querySelector('app-mahjong-tile')?.classList.contains('leaving')).toBe(true);
 
-    endAnimation(fixture, 'hand-leave'); // old hand finishes leaving → deal new in
-    expect(host.querySelector('app-mahjong-tile')?.classList.contains('dealin')).toBe(true);
-
-    endAnimation(fixture, 'hand-dealflip'); // new hand settles
-    const tile = host.querySelector('app-mahjong-tile');
-    expect(tile?.classList.contains('dealin')).toBe(false);
-    expect(host.querySelectorAll('app-mahjong-tile').length).toBe(1);
-  });
-
-  it('applies the win/lose flash when flash is set', () => {
-    const fixture = create();
-    endAnimation(fixture, 'hand-deal');
-    fixture.componentRef.setInput('flash', 'win');
-    fixture.detectChanges();
-    const host = fixture.nativeElement as HTMLElement;
-    expect(host.querySelector('app-mahjong-tile')?.classList.contains('flash-win')).toBe(true);
+    expect(tileCount(fixture)).toBe(1);
+    expect(totalText(fixture)).toBe('9');
+    expect(revealed).toBe(1);
   });
 });
