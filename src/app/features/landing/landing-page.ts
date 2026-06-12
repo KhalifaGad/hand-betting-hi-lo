@@ -11,6 +11,7 @@ import { LeaderboardService } from './services/leaderboard.service';
 @Component({
   selector: 'app-landing-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LeaderboardService],
   imports: [NeonButtonComponent, HowToPlayComponent, LeaderboardComponent, TileFanComponent],
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.css',

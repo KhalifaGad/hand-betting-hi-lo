@@ -1,7 +1,8 @@
-import { HonorId, Suit, TileNumber, Tile } from "@core";
+import { Tile } from "@core";
 
 export type HonorGameTile = Extract<Tile, { kind: 'honor' }> & { id: string; value: number };
+export type NumberGameTile = Extract<Tile, { kind: 'num' }> & { id: string };
 
 export type GameTile =
-  | { id: string; kind: 'num'; value: TileNumber; suit: Suit }
+  | NumberGameTile
   | HonorGameTile;

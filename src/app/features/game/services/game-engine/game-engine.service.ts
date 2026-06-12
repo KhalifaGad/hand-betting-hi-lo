@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { GAME_CONFIG, HonorId } from '@core';
+import { GAME_CONFIG, HonorId, GameRun, GAME_RESULT_REPOSITORY } from '@core';
 import { HONOR_META } from '@shared';
 import { GameOver, GameView, HistoryEntry, RoundResult, HonorDistribution } from '../../models';
 import { BetDirection, GameService } from '../game.service';
@@ -11,6 +11,7 @@ import { Scaler } from './scaler';
 @Injectable()
 export class GameEngineService implements GameService {
   private readonly config = inject(GAME_CONFIG);
+  private readonly gameResultRepository = inject(GAME_RESULT_REPOSITORY);
   private readonly scorer = new Scorer(this.config);
   private readonly deck = new Deck(
     this.config, 
@@ -131,14 +132,7 @@ export class GameEngineService implements GameService {
     }
 
     if (this.reshuffles() >= this.config.maxReshuffles) { 
-      alert('max reshuffles reached');
-      this.gameOver.set({
-        reason: 'max reshuffles reached',
-        finalScore: this.score(),
-        hands: this.handsCount(),
-        bestStreak: this.bestStreak(),
-        isHighScore: false, // TODO: inject previous high score
-      });
+      this.endGame('max reshuffles reached');
       return;
     }
 
@@ -173,12 +167,26 @@ export class GameEngineService implements GameService {
 
   private onBustedTileEndGame(busted: HonorGameTile): void { 
     const honorName = HONOR_META[busted.honorId].name;
-    this.gameOver.set({
-      reason: `${honorName} reached ${this.config.bustHigh}`,
-      finalScore: this.score(),
-      hands: this.handsCount(),
+    this.endGame(`${honorName} reached ${this.config.bustHigh}`)
+  }
+  
+  private endGame(reason: string): void { 
+    const run: GameRun = {
+      score: this.score(),
+      streak: this.streak(),
       bestStreak: this.bestStreak(),
-      isHighScore: false, // TODO: inject previous high score
+      hands: this.handsCount(),
+      reshuffles: this.reshuffles(),
+      date: new Date(),
+    };
+    const isHighScore = this.gameResultRepository.isHighScore(run.score);
+    this.gameOver.set({
+      reason,
+      finalScore: run.score,
+      hands: run.hands,
+      bestStreak: run.bestStreak,
+      isHighScore,
     });
+    this.gameResultRepository.save(run);
   }
 }
