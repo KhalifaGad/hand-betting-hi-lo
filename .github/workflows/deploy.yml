@@ -1,0 +1,55 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Permissions the official Pages deploy needs (OIDC token + Pages write).
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deploys at once; let a newer push supersede an in-flight one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Gate the deploy on a green suite (jsdom — no browser needed).
+      - run: npm test -- --watch=false
+
+      # base-href must match the project-pages sub-path: /<repo>/
+      - run: npm run build -- --base-href=/hand-betting-hi-lo/
+
+      # GitHub Pages has no SPA rewrite, so deep links (e.g. /game) 404 on
+      # refresh. Serving index.html as 404.html lets the Angular router take over.
+      - name: SPA deep-link fallback
+        run: cp dist/hand-betting-hi-lo/browser/index.html dist/hand-betting-hi-lo/browser/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/hand-betting-hi-lo/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
